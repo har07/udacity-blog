@@ -17,27 +17,46 @@
 import webapp2
 import validations
 import tools
+from rot13 import Rot13
 
 form = """
 <form method="post">
-	What is your birthday?
-	<br>
-	<label> Month
-		<input type="text" name="month" value="%(month)s">
-	</label>
-	<label> Day
-		<input type="text" name="day" value="%(day)s">
-	</label>
-	<label> Year
-		<input type="text" name="year" value="%(year)s">
-	</label>
+    What is your birthday?
+    <br>
+    <label> Month
+        <input type="text" name="month" value="%(month)s">
+    </label>
+    <label> Day
+        <input type="text" name="day" value="%(day)s">
+    </label>
+    <label> Year
+        <input type="text" name="year" value="%(year)s">
+    </label>
     <div style="color: red">%(error)s</div>
-	<br>
-	<br>
-	<input type="submit">
+    <br>
+    <br>
+    <input type="submit">
 </form>
 """
 
+form_rot13 = """
+<html>
+  <head>
+    <title>Unit 2 Rot 13</title>
+  </head>
+
+  <body>
+    <h2>Enter some text to ROT13:</h2>
+    <form method="post">
+      <textarea name="text"
+                style="height: 100px; width: 400px;">{0}</textarea>
+      <br>
+      <input type="submit">
+    </form>
+  </body>
+
+</html>
+"""
 
 class MainHandler(webapp2.RequestHandler):
 
@@ -49,7 +68,7 @@ class MainHandler(webapp2.RequestHandler):
         self.response.write(form % params)
 
     def get(self):
-    	# self.response.headers['Content-Type'] = 'text/plain'
+        # self.response.headers['Content-Type'] = 'text/plain'
         self.write_form()
 
     def post(self):
@@ -71,8 +90,24 @@ class ThanksHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write("Thanks! That's a totally valid date!")
 
+class Rot13Handler(webapp2.RequestHandler):
+    def write_form(self, text=""):
+        text = tools.escape_html(text)
+        self.response.write(form_rot13.format(text))
+        
+    def get(self):
+        self.write_form()
+        
+    def post(self):
+        plain = self.request.get("text")
+        #convert string from unicode to normal string:
+        plain = str(plain)
+        encryptor = Rot13()
+        encrypted = encryptor.encrypt(plain)
+        self.write_form(encrypted)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
     , ('/thanks', ThanksHandler)
+    , ('/unit2/rot13', Rot13Handler)
 ], debug=True)
