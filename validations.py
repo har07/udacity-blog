@@ -1,3 +1,9 @@
+import re
+
+USER_RE = re.compile('^[a-zA-Z0-9_-]{3,20}$')
+PASS_RE = re.compile('^.{3,20}$')
+EMAIL_RE = re.compile('^[\S]+@[\S]+\.[\S]+$')
+
 months = ['January',
           'February',
           'March',
@@ -12,13 +18,13 @@ months = ['January',
           'December']
           
 def valid_month(month):
-	if month:
-		shortMonths = dict([(m[:3].lower(),m) for m in months])
-		shortMonth = month[:3].lower()
-		if shortMonth in shortMonths :
-			return shortMonths[shortMonth]
+    if month:
+        shortMonths = dict([(m[:3].lower(),m) for m in months])
+        shortMonth = month[:3].lower()
+        if shortMonth in shortMonths :
+            return shortMonths[shortMonth]
     
-	return None
+    return None
 
 def valid_day(day):
      if day and day.isdigit():
@@ -33,3 +39,12 @@ def valid_year(year):
           if year_int >= 1900 and year_int <= 2020:
                return year_int
      return None
+     
+def is_valid_username(name):
+    return USER_RE.match(name)
+    
+def is_valid_password(passw):
+    return PASS_RE.match(passw)
+    
+def is_valid_email(email):
+    return EMAIL_RE.match(email)

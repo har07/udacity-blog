@@ -6,6 +6,33 @@ class TestValidations(unittest.TestCase):
   
   def setUp(self):
     pass
+    
+  def test_valid_user(self):
+    """
+    test username validation function
+    """
+    self.assertTrue(validations.is_valid_username("har07"))
+    self.assertTrue(validations.is_valid_username("har"))
+    self.assertFalse(validations.is_valid_username("x~jfd"))
+    self.assertFalse(validations.is_valid_username("h"))
+	
+  def test_valid_password(self):
+    """
+    test password validation function
+    """
+    self.assertTrue(validations.is_valid_password("p@$$word"))
+    self.assertTrue(validations.is_valid_password("p@s"))
+    self.assertFalse(validations.is_valid_password("p"))
+    self.assertFalse(validations.is_valid_password("p~"))
+	
+  def test_valid_email(self):
+    """
+    test email validation function
+    """
+    self.assertTrue(validations.is_valid_email("mail@foo.bar"))
+    self.assertTrue(validations.is_valid_email("m@f.b"))
+    self.assertFalse(validations.is_valid_email("mail@foo"))
+    self.assertFalse(validations.is_valid_email("mail@.bar"))
 
   def test_valid_month(self):
     """
@@ -63,5 +90,5 @@ class TestValidations(unittest.TestCase):
     self.assertEqual(validations.valid_year('3000'), None)
 
 if __name__ == '__main__':
-	unittest.main()
+    unittest.main()
     
