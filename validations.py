@@ -16,14 +16,14 @@ months = ['January',
           'October',
           'November',
           'December']
-          
+
 def valid_month(month):
     if month:
         shortMonths = dict([(m[:3].lower(),m) for m in months])
         shortMonth = month[:3].lower()
         if shortMonth in shortMonths :
             return shortMonths[shortMonth]
-    
+
     return None
 
 def valid_day(day):
@@ -39,12 +39,37 @@ def valid_year(year):
           if year_int >= 1900 and year_int <= 2020:
                return year_int
      return None
-     
-def is_valid_username(name):
-    return USER_RE.match(name)
-    
-def is_valid_password(passw):
-    return PASS_RE.match(passw)
-    
-def is_valid_email(email):
-    return EMAIL_RE.match(email)
+
+def valid_username(name):
+    match = USER_RE.match(name)
+    is_valid = True
+    validation_msg = ''
+    if not match:
+        validation_msg = "That's not a valid username."
+        is_valid = False
+    return is_valid, validation_msg
+
+
+def valid_password(passw):
+    match = PASS_RE.match(passw)
+    is_valid = True
+    validation_msg = ''
+    if not match:
+        validation_msg = "That wasn't a valid password."
+        is_valid = False
+    return is_valid, validation_msg
+
+def valid_password_verification(passw1, passw2):
+    is_valid = passw1 == passw2
+    validation_msg = ''
+    if not is_valid:
+        validation_msg = "Your passwords didn't match."
+    return is_valid, validation_msg
+
+def valid_email(email):
+    is_valid = True
+    validation_msg = ''
+    if email != '' and not EMAIL_RE.match(email):
+        validation_msg = "That's not a valid email."
+        is_valid = False
+    return is_valid, validation_msg

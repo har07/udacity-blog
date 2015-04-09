@@ -3,36 +3,36 @@ import validations
 
 class TestValidations(unittest.TestCase):
   # """test package for my udacity web app"""
-  
+
   def setUp(self):
     pass
-    
+
   def test_valid_user(self):
     """
     test username validation function
     """
-    self.assertTrue(validations.is_valid_username("har07"))
-    self.assertTrue(validations.is_valid_username("har"))
-    self.assertFalse(validations.is_valid_username("x~jfd"))
-    self.assertFalse(validations.is_valid_username("h"))
-	
+    self.assertTrue(validations.valid_username("har07")[0])
+    self.assertTrue(validations.valid_username("har")[0])
+    self.assertFalse(validations.valid_username("x~jfd")[0])
+    self.assertFalse(validations.valid_username("h")[0])
+
   def test_valid_password(self):
     """
     test password validation function
     """
-    self.assertTrue(validations.is_valid_password("p@$$word"))
-    self.assertTrue(validations.is_valid_password("p@s"))
-    self.assertFalse(validations.is_valid_password("p"))
-    self.assertFalse(validations.is_valid_password("p~"))
-	
+    self.assertTrue(validations.valid_password("p@$$word")[0])
+    self.assertTrue(validations.valid_password("p@s")[0])
+    self.assertFalse(validations.valid_password("p")[0])
+    self.assertFalse(validations.valid_password("p~")[0])
+
   def test_valid_email(self):
     """
     test email validation function
     """
-    self.assertTrue(validations.is_valid_email("mail@foo.bar"))
-    self.assertTrue(validations.is_valid_email("m@f.b"))
-    self.assertFalse(validations.is_valid_email("mail@foo"))
-    self.assertFalse(validations.is_valid_email("mail@.bar"))
+    self.assertTrue(validations.valid_email("mail@foo.bar")[0])
+    self.assertTrue(validations.valid_email("m@f.b")[0])
+    self.assertFalse(validations.valid_email("mail@foo")[0])
+    self.assertFalse(validations.valid_email("mail@.bar")[0])
 
   def test_valid_month(self):
     """
@@ -91,4 +91,4 @@ class TestValidations(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
+
