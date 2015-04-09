@@ -18,6 +18,7 @@ import webapp2
 import validations
 import tools
 from rot13 import Rot13
+import main_templating
 
 form = """
 <form method="post">
@@ -83,21 +84,22 @@ class MainHandler(webapp2.RequestHandler):
             message = "That doesn't look valid to me, friend."
             self.write_form(message, month, day, year)
         else:
-            self.redirect("/thanks")
+            self.redirect("/thanks?source=date")
 
 
 class ThanksHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write("Thanks! That's a totally valid date!")
+        source = self.request.get("source")
+        self.response.write("Thanks! That's a totally valid %s!" % source)
 
 class Rot13Handler(webapp2.RequestHandler):
     def write_form(self, text=""):
         text = tools.escape_html(text)
         self.response.write(form_rot13.format(text))
-        
+
     def get(self):
         self.write_form()
-        
+
     def post(self):
         plain = self.request.get("text")
         #convert string from unicode to normal string:
@@ -106,8 +108,39 @@ class Rot13Handler(webapp2.RequestHandler):
         encrypted = encryptor.encrypt(plain)
         self.write_form(encrypted)
 
+class SignupHandler(main_templating.Handler):
+    def get(self):
+        self.render("signup.html", data={})
+
+    def post(self):
+        username = self.request.get("username")
+        password = self.request.get("password")
+        verify = self.request.get("verify")
+        email = self.request.get("email")
+
+        is_valid_username, username_msg = validations.valid_username(username)
+        is_valid_password, password_msg = validations.valid_password(password)
+        is_valid_verification, verify_msg = validations.valid_password_verification(password, verify)
+        is_valid_email, email_msg = validations.valid_email(email)
+
+        if is_valid_username and is_valid_password and is_valid_verification and is_valid_email:
+            self.redirect('/thanks?data')
+        else:
+            data = {'username': username,
+                    'email': email,
+                    'username_msg': username_msg,
+                    'password_msg': password_msg,
+                    'email_msg': email_msg}
+            if is_valid_password:
+                data['verify_msg'] = verify_msg
+            self.render("signup.html", data=data)
+
+
+
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
     , ('/thanks', ThanksHandler)
     , ('/unit2/rot13', Rot13Handler)
+    , ('/unit2/signup', SignupHandler)
 ], debug=True)
